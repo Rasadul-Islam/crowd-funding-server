@@ -30,10 +30,16 @@ async function run() {
     // const haiku = database.collection("haiku");
     const campaignCollection = client.db('campaignDB').collection('campaign');
 
-    app.post('/campaign', async(req, res)=>{
+    app.post('/campaign', async (req, res) => {
       const newCampaign = req.body;
       console.log(newCampaign);
       const result = await campaignCollection.insertOne(newCampaign);
+      res.send(result);
+    })
+
+    app.get('/campaign', async (req, res) => {
+      const cursor = campaignCollection.find();
+      const result = await cursor.toArray();
       res.send(result);
     })
 
@@ -50,12 +56,12 @@ run().catch(console.dir);
 
 
 
-app.get('/', (req, res)=>{
-    res.send('Crwod fonidng server is Runing')
+app.get('/', (req, res) => {
+  res.send('Crwod fonidng server is Runing')
 })
 
-app.listen(port, ()=> {
-    console.log(`funding server is running on port: ${port}`)
+app.listen(port, () => {
+  console.log(`funding server is running on port: ${port}`)
 })
 
 

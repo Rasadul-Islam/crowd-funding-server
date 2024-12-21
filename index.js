@@ -29,7 +29,8 @@ async function run() {
     // const database = client.db("insertDB");
     // const haiku = database.collection("haiku");
     const campaignCollection = client.db('campaignDB').collection('campaign');
-
+    
+    //post campaign data
     app.post('/campaign', async (req, res) => {
       const newCampaign = req.body;
       console.log(newCampaign);
@@ -37,11 +38,14 @@ async function run() {
       res.send(result);
     })
 
+    //get campaign data on port
     app.get('/campaign', async (req, res) => {
       const cursor = campaignCollection.find().limit(6);
       const result = await cursor.toArray();
       res.send(result);
     })
+
+    // get campaign's one ditails data by id
     app.get('/campaign/:id', async(req, res)=>{
       const id = req.params.id;
       const query ={_id: new ObjectId(id)}
@@ -49,7 +53,7 @@ async function run() {
       res.send(result);
     })
 
-
+    // delete one campaign data by id
     app.delete('/campaign/:id', async(req, res)=>{
       const id = req.params.id;
       const query ={_id: new ObjectId(id)}

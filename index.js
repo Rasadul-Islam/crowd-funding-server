@@ -38,10 +38,17 @@ async function run() {
     })
 
     app.get('/campaign', async (req, res) => {
-      const cursor = campaignCollection.find();
+      const cursor = campaignCollection.find().limit(6);
       const result = await cursor.toArray();
       res.send(result);
     })
+    app.get('/campaign/:id', async(req, res)=>{
+      const id = req.params.id;
+      const query ={_id: new ObjectId(id)}
+      const result =await campaignCollection.findOne(query);
+      res.send(result);
+    })
+
 
     app.delete('/campaign/:id', async(req, res)=>{
       const id = req.params.id;

@@ -38,9 +38,16 @@ async function run() {
       res.send(result);
     })
 
-    //get campaign data on port
+    //get All campaigns data on port
+    app.get('/all-campaign', async (req, res) => {
+      const cursor = campaignCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
+    //get Running campaigns data on port
     app.get('/campaign', async (req, res) => {
-      const cursor = campaignCollection.find().limit(6);
+      const cursor = campaignCollection.find().limit(5);
       const result = await cursor.toArray();
       res.send(result);
     })

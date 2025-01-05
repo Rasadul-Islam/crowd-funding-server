@@ -47,8 +47,16 @@ async function run() {
 
     //get Running campaigns data on port
     app.get('/campaign', async (req, res) => {
-      const cursor = campaignCollection.find().limit(5);
+      const cursor = campaignCollection.find().limit(6);
       const result = await cursor.toArray();
+      res.send(result);
+    })
+
+    // Get my campaign data
+    app.get('/campaign/my/:email',async(req, res)=>{
+      const email = req.params.email;
+      const query = {creatorEmail:email}
+      const result = await campaignCollection.find(query).toArray();
       res.send(result);
     })
 

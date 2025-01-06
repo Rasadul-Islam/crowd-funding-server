@@ -52,7 +52,7 @@ async function run() {
       res.send(result);
     })
 
-    // Get my campaign data
+    // Get My campaign data
     app.get('/campaign/my/:email',async(req, res)=>{
       const email = req.params.email;
       const query = {creatorEmail:email}

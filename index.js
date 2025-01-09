@@ -29,7 +29,7 @@ async function run() {
     // const database = client.db("insertDB");
     // const haiku = database.collection("haiku");
     const campaignCollection = client.db('campaignDB').collection('campaign');
-    
+
     //post campaign data
     app.post('/campaign', async (req, res) => {
       const newCampaign = req.body;
@@ -53,28 +53,57 @@ async function run() {
     })
 
     // Get My campaign data
-    app.get('/campaign/my/:email',async(req, res)=>{
+    app.get('/campaign/my/:email', async (req, res) => {
       const email = req.params.email;
-      const query = {creatorEmail:email}
+      const query = { creatorEmail: email }
       const result = await campaignCollection.find(query).toArray();
       res.send(result);
     })
 
     // get campaign's one ditails data by id
-    app.get('/campaign/:id', async(req, res)=>{
+    app.get('/campaign/:id', async (req, res) => {
       const id = req.params.id;
-      const query ={_id: new ObjectId(id)}
-      const result =await campaignCollection.findOne(query);
+      const query = { _id: new ObjectId(id) }
+      const result = await campaignCollection.findOne(query);
       res.send(result);
     })
 
     // delete one campaign data by id
-    app.delete('/campaign/:id', async(req, res)=>{
+    app.delete('/campaign/:id', async (req, res) => {
       const id = req.params.id;
-      const query ={_id: new ObjectId(id)}
-      const result =await campaignCollection.deleteOne(query);
+      const query = { _id: new ObjectId(id) }
+      const result = await campaignCollection.deleteOne(query);
       res.send(result);
     })
+
+    // Get one campaign data in Update
+    app.get('/campaign/update/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await campaignCollection.findOne(query);
+      res.send(result);
+    })
+    // Update one campaign data
+    app.put('/campaign/update/:id', async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateCampaign = req.body;
+
+      const campaign = {
+        $set: {
+          image: updateCampaign.image,
+          title: updateCampaign.title,
+          campaign_type: updateCampaign.campaign_type,
+          description: updateCampaign.description,
+          donation_amount: updateCampaign.donation_amount,
+          deadline: updateCampaign.deadline,
+        }
+      }
+      const result = await campaignCollection.updateOne(filter,campaign, options,)
+      res.send(result);
+    })
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });

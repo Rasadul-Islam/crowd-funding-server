@@ -29,6 +29,7 @@ async function run() {
     // const database = client.db("insertDB");
     // const haiku = database.collection("haiku");
     const campaignCollection = client.db('campaignDB').collection('campaign');
+    const donateCollection = client.db('campaignDB').collection('donateCampaign')
 
     //post campaign data
     app.post('/campaign', async (req, res) => {
@@ -103,6 +104,21 @@ async function run() {
       const result = await campaignCollection.updateOne(filter,campaign, options,)
       res.send(result);
     })
+
+    // Donate data post
+    app.post('/campaign/donate',async(req, res)=>{
+      const newDonate = req.body;
+      const result = await donateCollection.insertOne(newDonate);
+      res.send(result);
+    })
+
+    //Get my donation data
+    app.get('/campaign/my-donation/:email', async (req, res) => {
+      const email = req.params.email;
+      const query = { donerEmail: email }
+      const result = await donateCollection.find(query).toArray();
+      res.send(result);
+  })
 
 
     // Send a ping to confirm a successful connection

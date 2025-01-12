@@ -48,10 +48,18 @@ async function run() {
 
     //get Running campaigns data on port
     app.get('/campaign', async (req, res) => {
-      const cursor = campaignCollection.find().limit(6);
-      const result = await cursor.toArray();
-      res.send(result);
-    })
+      const currentDate = new Date();
+      currentDate.setHours(0, 0, 0, 0); 
+      try {
+        const activeCampaigns = await campaignCollection
+          .find({deadline: { $gte: currentDate.toISOString()},}).limit(6).toArray();
+        res.send(activeCampaigns); 
+      } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: 'Error fetching campaigns.' });
+      }
+    });
+    
 
     // Get My campaign data
     app.get('/campaign/my/:email', async (req, res) => {
